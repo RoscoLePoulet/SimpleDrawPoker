@@ -1,9 +1,15 @@
 #include "poker.hh" 
 
 int main() {
-  std::srand(std::time(NULL));
-  deck D;
-  hand H = hand(D);
-  H.displayHand(std::cout);
+  Deck deck;
+  Hand hand(deck);
+
+  std::cout << "\n\n\n";
+  std::cout << hand;
+
+  hand.changeCard(0,deck);
+  
+  std::cout << "\n\n\n";
+  std::cout << hand;
   return 0;
 }

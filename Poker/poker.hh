@@ -1,54 +1,43 @@
 #pragma once
 
 #include <iostream>
+#include <array>
 #include <vector>
 #include <string>
-#include <utility>
-#include <algorithm>    // std::random_shuffle
-#include <ctime>        // std::time
-#include <cstdlib>      // std::rand, std::srand
-#include <map> 
 
 enum class symbol {diamonds, clubs, hearts, spades};
 enum class value {two, three, four, five, six, seven, eight, nine, ten, jack, queen, king, ace};
 
-//On utilise des vecteurs pour parcourir simplement les enums
+const std::array<symbol, 4> t_symbol {symbol::clubs, symbol::diamonds, symbol::hearts, symbol::spades};
 
-const std::vector<symbol> v_symbol {symbol::clubs, symbol::diamonds, symbol::hearts, symbol::spades};
-
-const std::vector<value> v_value {value::two, value::three, value::four, value::five, 
-                          value::six, value::seven, value::eight, value::nine, value::ten, value::jack, 
-                          value::queen, value::king, value::ace};
-class card {
+const std::array<value, 13> t_value {value::two, value::three, value::four, value::five, value::six, value::seven, value::eight, value::nine, value::ten, value::jack, value::queen, value::king, value::ace};
+class Card {
 private:
   symbol _symbol;
   value _value;
+  friend std::ostream& operator<<(std::ostream& os, const Card& c);
+  friend bool operator==(const Card& a, const Card& b);
 public:
-  card(const symbol &s, const value &v):_symbol(s),_value(v){}
-  card(const card & c) = default;
+  Card(const symbol& s, const value& v):_symbol(s),_value(v){}
+  Card(const Card& c) = default;
   symbol getSymbol() const {return _symbol;}
   value getValue() const {return _value;}
-  void setSymbol(const symbol &s) {_symbol = s;}
-  void setValue(const value &v) {_value = v;}
-  void displayCard(std::ostream & os) const;
 };
 
-class deck {
+class Deck{
 private:
-  std::vector<card> _deck;
+  std::vector<Card> _deck;
+  friend std::ostream& operator<<(std::ostream& os, const Deck& deck);
 public:
-  deck(); // On met les 52 cartes
-  card draw();
+  Deck();
+  Card draw(); //Pulls out a card, and deletes it from the deck.
 };
 
-class hand {
+class Hand{
 private:
-  std::vector<card> _hand;
-  std::map<std::string, value> _combination;
+  std::vector<Card> _hand;
+  friend std::ostream& operator<<(std::ostream& os, const Hand& hand);
 public:
-  hand(deck D); //On pioche 5 cartes du deck
-  void displayHand(std::ostream & os) const;
-  void swapCard(card c); // Echange une carte de la main contre celle du haut du paquet, puis met l'ancienne carte en début du paquet.
-  void displayCombination (std::ostream & os) const;
-  void setCombination(); // Cherche la meilleure combinaison de cartes du jeu, et la met dans _combination.
+  Hand(Deck& deck);
+  void changeCard(const int& i, Deck& deck); //Deletes the selected card and draws a new one from the deck.
 };
